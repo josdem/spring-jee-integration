@@ -40,8 +40,8 @@ public class MailServiceImpl implements MailService {
       final String subject) {
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
       public void prepare(MimeMessage mimeMessage) throws Exception {
-        mimeMessage.setRecipient(Message.RecipientType.TO,
-            new InternetAddress(email));
+        mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(
+            email));
         mimeMessage.setFrom(new InternetAddress("social@makingdevs.com"));
         mimeMessage.setSubject(subject);
         mimeMessage.setText(message);
@@ -52,9 +52,8 @@ public class MailServiceImpl implements MailService {
 
   }
 
-  public void sendMailWithAttach(String email, String message,
-      String subject, FileSystemResource attach)
-      throws MessagingException {
+  public void sendMailWithAttach(String email, String message, String subject,
+      FileSystemResource attach) throws MessagingException {
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -66,9 +65,8 @@ public class MailServiceImpl implements MailService {
     javaMailSender.send(mimeMessage);
   }
 
-  public void sendMailWithInline(String email, String message,
-      String subject, FileSystemResource inline)
-      throws MessagingException {
+  public void sendMailWithInline(String email, String message, String subject,
+      FileSystemResource inline) throws MessagingException {
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -81,18 +79,18 @@ public class MailServiceImpl implements MailService {
 
   }
 
-  public void sendMailWithEngine(final String email, final Map model,
-      final String subject, final String template) {
+  public void sendMailWithEngine(final String email,
+      final Map<String, Object> model, final String subject,
+      final String template) {
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
       public void prepare(MimeMessage mimeMessage) throws Exception {
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage,
-            true);
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
         Template myTemplate = configuration.getTemplate(template);
         message.setTo(email);
         message.setFrom("social@makingdevs.com");
         message.setSubject(subject);
-        String text = FreeMarkerTemplateUtils
-            .processTemplateIntoString(myTemplate, model);
+        String text = FreeMarkerTemplateUtils.processTemplateIntoString(
+            myTemplate, model);
         message.setText(text, true);
       }
     };

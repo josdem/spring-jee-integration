@@ -32,4 +32,18 @@ Nuestro objetivo en esta ocasión será implementar los siguientes métodos para
 include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailService.java[]
 ----
 
+Primero tenemos que considerar los elementos del servidor SMTP con el que vamos a hacer la conexión, aquí pondremos los parámetros para consumir un cliente de GMail, sin embargo, debería ser similar para cualquier otro proveedor de correos:
 
+[source, plain]
+.mailer/src/main/resources/mail.properties
+----
+include::{sourcedir}/mailer/src/main/resources/mail.properties[]
+----
+
+Teniéndolo listo podríamos leerlo desde nuestra configuración, con ayuda de `util:properties` o bien `property-placeholder` en configuración XML, sin embargo, en esta ocasión usaremoe JavaConfig, aunque siempre eres libre de escoger la forma que más te guste:
+
+[source, java]
+.mailer/src/main/java/com/makingdevs/integration/MailService.java
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailConfig.java[tag=environment]
+----
