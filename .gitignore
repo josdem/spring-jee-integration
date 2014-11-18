@@ -3,3 +3,7 @@
 **/.gradletasknamecache
 **/.idea/
 **/*.iml
+**/.classpath
+**/.project
+**/.settings/
+**/bin/

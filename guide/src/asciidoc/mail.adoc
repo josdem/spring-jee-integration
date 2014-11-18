@@ -3,4 +3,33 @@
 
 Spring viene con una abstracción en el uso del API de mail que hace muy simple el envío de correo electrónico.
 
+[IMPORTANT]
+.Dependencias necesarias
+====
+Debes de considerar tener en el _classpath_ de tu aplicación las bibliotecas de:
+
+* https://java.net/projects/javamail/pages/Home[JavaMail]
+* http://www.oracle.com/technetwork/java/jaf11-139815.html[JAF]
+
+Recuerda usar tu administrador de dependencias. Por ejemplo, observa como queda nuestro archivo de construcción _build.gradle_:
+
+[source, groovy]
+.mailer/build.gradle
+----
+include::{sourcedir}/mailer/build.gradle[]
+----
+====
+
+El paquete principal para el soporte de correo en Spring es `org.springframework.mail`. La interface central para el envío de correos `MailSender`; un simple objeto del tipo `SimpleMailMessage` encapsula las propiedades básicas para el envío del correo(como el _from_ y el _subject_ por ejemplo). Adicionalmente, en el paquete encontraremos una serie de excepciones checadas que provee un nivel de abstracción muy alto sobre el bajo sistema de excepciones de correo con la excepción `MailException`.
+
+La interfaz `org.springframework.mail.javamail.JavaMailSender` agrega características especiales de _JavaMail_ como el soporte a mensajes MIME para la interface `MailSender`, además, provee un _callback_ en una interfaz para la preparación de mensajes MIME de JavaMail llamada `org.springframework.mail.javamail.MimeMessagePreparator`.
+
+Nuestro objetivo en esta ocasión será implementar los siguientes métodos para el envío de correo:
+
+[source, java]
+.mailer/src/main/java/com/makingdevs/integration/MailService.java
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailService.java[]
+----
+
 
