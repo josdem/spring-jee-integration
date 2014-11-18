@@ -1,0 +1,6 @@
+
+= Uso de Spring Mail para envío de correo electrónico
+
+Spring viene con una abstracción en el uso del API de mail que hace muy simple el envío de correo electrónico.
+
+
