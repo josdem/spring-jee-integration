@@ -15,6 +15,4 @@ public interface MailService {
       FileSystemResource inline) throws MessagingException;
   void sendMailWithEngine(String email, Map<String, Object> model,
       String subject, String template);
-  void sendMailWithVelocityEngine(String email, Map<String, Object> model,
-      String subject, String template);
 }
