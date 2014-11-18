@@ -9,7 +9,21 @@
 :leveloffset: 1
 include::src/asciidoc/welcome.adoc[]
 
+include::src/asciidoc/mail.adoc[]
 
+include::src/asciidoc/jms.adoc[]
+
+include::src/asciidoc/quartz.adoc[]
+
+include::src/asciidoc/jndi.adoc[]
+
+include::src/asciidoc/rest_template.adoc[]
+
+include::src/asciidoc/webservices_soap.adoc[]
+
+include::src/asciidoc/cache.adoc[]
+
+include::src/asciidoc/monitoring.adoc[]
 
 include::src/asciidoc/thanks.adoc[]
 
