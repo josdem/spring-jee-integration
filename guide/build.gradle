@@ -1,0 +1,24 @@
+apply plugin: "groovy"
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+
+ext.childProjects = [':labs']
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.2'
+  }
+}
+
+asciidoctor {
+  options = [
+    attributes : [ 
+      'source-highlighter' : 'coderay',
+      toc : 'left',
+      sourcedir : "${project.rootDir}/labs/"
+    ]
+  ]
+}
