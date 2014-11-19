@@ -19,23 +19,26 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
+//tag::injection[]
 @Service("mailService")
 public class MailServiceImpl implements MailService {
 
   @Autowired
-  Configuration configuration;
+  private Configuration configuration; // <1>
   @Autowired
-  SimpleMailMessage templateMessage;
+  private SimpleMailMessage templateMessage; // <2>
   @Autowired
-  JavaMailSender javaMailSender;
-
+  private JavaMailSender javaMailSender; // <3>
+///end::injection[]
+  //tag::sendMail[]
   public void sendMail(String email, String message) {
     SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
     msg.setTo(email);
     msg.setText(message);
-    this.javaMailSender.send(msg);
+    javaMailSender.send(msg);
   }
-
+  //end::sendMail[]
+  //tag::sendMimeMail[]
   public void sendMimeMail(final String email, final String message,
       final String subject) {
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -47,11 +50,10 @@ public class MailServiceImpl implements MailService {
         mimeMessage.setText(message);
       }
     };
-
-    this.javaMailSender.send(preparator);
-
+    javaMailSender.send(preparator);
   }
-
+  //end::sendMimeMail[]
+  //tag::sendMailWithAttach[]
   public void sendMailWithAttach(String email, String message, String subject,
       FileSystemResource attach) throws MessagingException {
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -64,11 +66,11 @@ public class MailServiceImpl implements MailService {
     helper.addAttachment(attach.getFilename(), attach);
     javaMailSender.send(mimeMessage);
   }
-
+  //end::sendMailWithAttach[]
+  //tag::sendMailWithInline[]  
   public void sendMailWithInline(String email, String message, String subject,
       FileSystemResource inline) throws MessagingException {
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
     helper.setTo(email);
     helper.setFrom("social@makingdevs.com");
@@ -76,9 +78,9 @@ public class MailServiceImpl implements MailService {
     helper.setText(message, true);
     helper.addInline("identifier1", inline);
     javaMailSender.send(mimeMessage);
-
   }
-
+  //end::sendMailWithInline[]
+  //tag::sendMailWithEngine[]
   public void sendMailWithEngine(final String email,
       final Map<String, Object> model, final String subject,
       final String template) {
@@ -94,7 +96,8 @@ public class MailServiceImpl implements MailService {
         message.setText(text, true);
       }
     };
-    this.javaMailSender.send(preparator);
+    javaMailSender.send(preparator);
   }
+  //end::sendMailWithEngine[]
 
 }

@@ -24,6 +24,8 @@ El paquete principal para el soporte de correo en Spring es `org.springframework
 
 La interfaz `org.springframework.mail.javamail.JavaMailSender` agrega características especiales de _JavaMail_ como el soporte a mensajes MIME para la interface `MailSender`, además, provee un _callback_ en una interfaz para la preparación de mensajes MIME de JavaMail llamada `org.springframework.mail.javamail.MimeMessagePreparator`.
 
+== Configuración del AppCtx
+
 Nuestro objetivo en esta ocasión será implementar los siguientes métodos para el envío de correo:
 
 [source, java]
@@ -43,7 +45,109 @@ include::{sourcedir}/mailer/src/main/resources/mail.properties[]
 Teniéndolo listo podríamos leerlo desde nuestra configuración, con ayuda de `util:properties` o bien `property-placeholder` en configuración XML, sin embargo, en esta ocasión usaremoe JavaConfig, aunque siempre eres libre de escoger la forma que más te guste:
 
 [source, java]
-.mailer/src/main/java/com/makingdevs/integration/MailService.java
+.mailer/src/main/java/com/makingdevs/integration/MailConfig.java
 ----
 include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailConfig.java[tag=environment]
 ----
+
+Como mencionamos anteriormente, necesitamos configurar la interfaz `MailSender`, y nuevamente es tu elección la forma en que deseas configurar:
+
+[source, java]
+.mailer/src/main/java/com/makingdevs/integration/MailConfig.java
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailConfig.java[tag=configuration1]
+----
+
+=== Uso de JNDI Mail Session
+
+Tal vez tengas configurado un `javax.mail.MailSession` en un árbol JNDI. Si es así, entonces `JavaMailSenderImpl` ofrece una opción para usarlo. Y aunque aún no vemos el acceso a JNDI, podemos adelantar la forma en como se usa con ayuda de los namespaces de Spring.
+
+[source, xml]
+----
+<jee:jndi-lookup id="mailSession" jndi-name="mail/Session" resource-ref="true" />”
+
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" p:session-ref="mailSession"/>
+----
+
+Alambrando la propiedad `session` de `JavaMailSenderImpl` reemplazamos por completo la configuración previa, la cual se delega completamente al servidor de aplicaciones.
+
+'''
+
+Si lo que necesitamos es simplemente enviar un correo en texto plano, con elementos fijos como el remitente y el asunto entonces podemos usar `SimpleMailMessage`, aquí su configuración:
+
+[source, java]
+.mailer/src/main/java/com/makingdevs/integration/MailConfig.java
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailConfig.java[tag=configuration2]
+----
+
+Si al contrario, deseamos enviar un correo con elementos mucho más elaborados, es decir, estilos, imágenes y texto que podemos obtener de nuestro modelo de dominio entonces será conveniente usar una tecnología que me permita hacerlo, por ejemplo: http://velocity.apache.org[Velocity] o http://freemarker.org[Freemarker].
+
+Para nuestro caso, usaremos Freemarker, pues la información que se puede encontrar en Web generalmente habla mucho más de Velocity.
+
+[source, java]
+.mailer/src/main/java/com/makingdevs/integration/MailConfig.java
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailConfig.java[tag=configuration3]
+----
+
+== Implementación del sender de correo
+
+Veamos a continuación la implementación de nuestra interface de negocio, la cual, nos permitirá usar el `JavaMailSenderImpl` de una forma muy sencilla:
+
+[source, java]
+.Inyección de dependencias
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailServiceImpl.java[tag=injection]
+----
+<1> Configuración de Freemarker para el uso de templates
+<2> El `SimpleMailMesssage` es un bean de Spring para el envío de mensajes en texto plano
+<3> El sender de correos de Spring
+
+[source, java]
+.Envío de un mensaje simple
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailServiceImpl.java[tag=sendMail]
+----
+
+`MimeMessagePreparator` es una interfaz _callback_ para la preparación de mensajes MIME. El método correspondiente `send()` del `JavaMailSender` se ocupará de la actual creación de la instancia de `MimeMessage`, y de la apropiada conversión de la excepción.
+
+[source, java]
+.Envío de un mensaje con `MimeMessagePreparator`
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailServiceImpl.java[tag=sendMimeMail]
+----
+
+Es a menudo conveniente usar `MimeMessageHelper` para el poblar el `MimeMessage` que se usa, en particular cuando se trabaja con adjuntos o encodings con caracteres especiales.
+
+[source, java]
+.Envío de un mensaje con `MimeMessageHelper` y archivos adjuntos
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailServiceImpl.java[tag=sendMailWithAttach]
+----
+
+`MimeMessageHelper` ofrece soporte para HTML contenido de texto, elementos en línea, tales como imágenes y archivos adjuntos de correo típicas. También es compatible con los nombres de personas que acompañan a las direcciones de correo. 
+
+[source, java]
+.Envío de un mensaje con archivos en línea
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailServiceImpl.java[tag=sendMailWithInline]
+----
+
+[source, java]
+.Envío de correo con un template de Freemarker
+----
+include::{sourcedir}/mailer/src/main/java/com/makingdevs/integration/MailServiceImpl.java[tag=sendMailWithEngine]
+----
+
+== Prueba del envío de correo
+
+[source, java]
+.src/test/java/com/makingdevs/integration/MailServiceIntegrationTest.java
+----
+include::{sourcedir}/mailer/src/test/java/com/makingdevs/integration/MailServiceIntegrationTest.java[]
+----
+<1> Usa una dirección de correo donde puedas recibir el mensaje
+<2> Usa una imagen propia de tu sistema operativo
+<3> Intenta usar una imagen grande
+<4> Implementa la creación de un correo personalizado con ayuda de un template
