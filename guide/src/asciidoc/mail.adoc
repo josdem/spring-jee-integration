@@ -150,4 +150,5 @@ include::{sourcedir}/mailer/src/test/java/com/makingdevs/integration/MailService
 <1> Usa una dirección de correo donde puedas recibir el mensaje
 <2> Usa una imagen propia de tu sistema operativo
 <3> Intenta usar una imagen grande
-<4> Implementa la creación de un correo personalizado con ayuda de un template
+<4> Implementa la creación de un correo que envíe los datos de un proyecto y sus historias de usuario
+
