@@ -152,3 +152,11 @@ include::{sourcedir}/mailer/src/test/java/com/makingdevs/integration/MailService
 <3> Intenta usar una imagen grande
 <4> Implementa la creación de un correo que envíe los datos de un proyecto y sus historias de usuario
 
+Aquí tienes un ejemplo de plantilla con Freemarker, en el cual te puedes apoyar para realizar el ejercicio.
+
+[source, html]
+.src/main/resources/freemarker/mail/template.ftl
+----
+include::{sourcedir}/mailer/src/main/resources/freemarker/mail/template.ftl[]
+----
+

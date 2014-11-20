@@ -1,5 +1,10 @@
 package com.makingdevs.integration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.mail.MessagingException;
 
 import org.junit.Test;
@@ -47,6 +52,17 @@ public class MailServiceIntegrationTest {
   @Test
   public void sendingMailWithEngineTest() throws MessagingException {
     // <4>
+    Map model = new HashMap();
+    model.put("name", "neodevelop");
+    model.put("courseName", "Spring Mail Training");
+    List<String> manifesto = new ArrayList<String>();
+    manifesto.add("Individuals and interactions over processes and tools");
+    manifesto.add("Working software over comprehensive documentation");
+    manifesto.add("Customer collaboration over contract negotiation");
+    manifesto.add("Responding to change over following a plan");
+    model.put("manifesto", manifesto);
+    mailService.sendMailWithEngine("username@domain.com", model,
+        "Notificación con Template", "template.ftl");
   }
 
 }
