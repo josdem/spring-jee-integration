@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:component-scan base-package="com.synergyj.curso.jms" />
+
+	<!-- Este bean levanta como servidor a ActiveMQ -->
+	<bean id="jmsFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		<property name="brokerURL"
+			value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false" />
+	</bean>
+
+	<!-- La fabrica de conexiones del broker de mensajeria -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="jmsFactory" />
+	</bean>
+
+	<bean id="topico" class="org.apache.activemq.command.ActiveMQTopic">
+		<property name="physicalName">
+			<value>topic.cliente</value>
+		</property>
+	</bean>
+
+	<bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName">
+			<value>queue.cliente</value>
+		</property>
+	</bean>
+
+	<!-- Spring JMS Template -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<!--
+		Este componente usa el conexion factory para conectarse al topico y
+		escuchar mensajes
+	-->
+	<bean id="listenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="topico" />
+		<property name="messageListener" ref="myMessageListener" />
+	</bean>
+
+	<!--jms:listener-container connection-factory="connectionFactory" destination-type="topic"-->
+		<!-- jms:listener destination="topic.cliente" ref="myMessageListener"/-->
+		<!--jms:listener destination="queue.cliente" ref="myMessageListener" /-->
+	<!-- /jms:listener-container-->
+
+</beans>

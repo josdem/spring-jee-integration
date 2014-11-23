@@ -1,0 +1,25 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+
+	<servlet>
+		<servlet-name>trackbox</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>trackbox</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+  <!--
+    Deshabilita en el contenedor de Servlet el manejo de archivo de
+    bienvenida. Necesario para la compatibilidad con Servlet 3.0 y Tomcat
+    7.0
+  -->
+  <welcome-file-list>
+    <welcome-file></welcome-file>
+  </welcome-file-list>
+
+</web-app>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+  xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+  <context:annotation-config />
+
+  <jpa:repositories base-package="com.makingdevs.repositories" />
+
+  <jdbc:embedded-database type="H2" id="dataSource">
+    <jdbc:script location="classpath:/com/makingdevs/scripts/user.sql" />
+    <jdbc:script location="classpath:/com/makingdevs/scripts/project.sql" />
+    <jdbc:script location="classpath:/com/makingdevs/scripts/user_story.sql" />
+    <jdbc:script location="classpath:/com/makingdevs/scripts/task.sql" />
+    <jdbc:script location="classpath:/com/makingdevs/scripts/sprint.sql" />
+    <jdbc:script location="classpath:/com/makingdevs/scripts/constraints.sql" />
+  </jdbc:embedded-database>
+
+  <bean id="entityManagerFactory"
+    class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+    <property name="packagesToScan" value="com.makingdevs.model" />
+  </bean>
+
+  <bean id="jpaVendorAdapter"
+    class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    <property name="showSql" value="false" />
+    <property name="generateDdl" value="false" />
+    <property name="database" value="H2" />
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+  </bean>
+
+</beans>

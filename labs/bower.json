@@ -1,0 +1,21 @@
+{
+  "name": "springmvc-essentials-practices",
+  "version": "0.0.1",
+  "authors": [
+    "neodevelop <neodevelop@gmail.com>"
+  ],
+  "description": "Resources for project",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "bootstrap": "~3.1.1",
+    "bootstrap-file-input": "*"
+  }
+}

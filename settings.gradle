@@ -1,1 +1,2 @@
-include 'labs', 'guide'
+includeFlat 'labs',
+        'guide'
