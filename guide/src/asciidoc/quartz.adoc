@@ -1,4 +1,8 @@
 
-= Ejecuciones programadas con Quartz y Spring
+= Ejecución de tareas y calendarización con Quartz
+
+== Con XML declarativo y con namespaces
+
+== Con anotaciones
 
 

@@ -1,4 +1,46 @@
 
 = Integración de Java Message Service con Springframework
 
+La API de JMS(Java Message Service) es un estándar para la mensajería asíncrona.
+
+Características de JMS:
+
+* Es acerca de todo lo que tiene que ver con la comunicación entre aplicaciones, pero difiere de otros mecanismos en como la información es transferida entre sistemas.
+* JMS provee comunicación asíncrona entre aplicaciones.
+* Cuando los mensajes son envíados asíncronamente el cliente no tiene que esperar por el procesamiento.
+* Este esquema asíncrono ofrece varias ventajas sobre el esquema convencional de cliente-servidor síncrono.
+* Spring simplifica el envío y recepción de mensajes, creando MDP's(Message-Driven Pojo).
+* Spring proporciona un framework de integración que simplifica el uso de la API de JMS, similar a la integración de la API JDBC.
+
+JMS se pueden dividir en dos áreas de funcionalidad, la producción y consumo de mensajes. La clase `JmsTemplate` se utiliza para la producción de mensaje y la recepción de mensajes síncronos. Para la recepción asíncrona similar al estilo de _Message-Driven Bean_ de Java EE, Spring ofrece una serie de **listener containers** para mensajes que se utilizan para crear Message-Driven POJOs(MDPs). Además de una forma declarativa de definirlos.
+
+La clase `JmsTemplate` simplifica el uso de JMS manejando la creación y la liberación de recursos, muy similar a como lo haría el `JdbcTemplate`. El principio de diseño común para las clases de _template_ de Spring es proveer métodos de ayuda para ejecutar operaciones que son comúnes y para un uso más sofisticado, delegar la esencia de la tarea de procesamiento a la implementación de las interfaces. EL `JmsTemplate` ofrece métodos de conveniencia para el envío de mensajes, el conusmo de mensajes síncronamente, y la exposición de las sesiones JMS y el productor de mensajes.
+
+Con el uso del template, viene el manejo de excepciones, el cual lo hace a través de `JmsException`, en donde, ocurre una traducción de excepciones checadas y a no checadas, es decir, si existe alguna subclase de la excepción checada `javax.jmx.JMSException` de algun proveedor, dicha es traducida a una excepción no checada `UncategorizedJmsException`.
+
+Elementos adicionales que provee SpringJMS que son mucha ayuda son:
+
+* Una abstracción de `MessageConverter` para convertir objetos Java y mensajes.
+* Varias estrategias para manejar _destinations_ de JMS, como un proveedor de un _service locator_ para _destinations_ en JNDI.
+* Infraestructura necesaria para soportar _endpoints listeners_ manejados por anotaciones usando `@JmsListener`.
+* Una implementación del namespace de **jms** como Java Config para dar soporte a los contenedores que manejaran los _listeners_ y crearán los endpoints.
+* Una implementación de un `ConnectionFactory` ajustable para usarse en aplicaciones _standalone_.
+* Una implementación de un `PlatformTransactionManager` para JMS(`JmsTransactionManager`). Este permite integración transparente de JMS como un recurso transaccional dentro de los mecanismos de transacciones de Spring.
+
+== El JmsTemplate
+
+El `JmsTemplate` sólo necesita implementar retrollamadas en interfaces dado un contrato de alto nivel muy bien definido. La interfaz `MessageCreator` crea un mensaje dado un `Session` proveído por lallamada al `JmsTemplate`. Y en orden para permitir el uso más completo de la API de JMS, la interfaz `SessionCallback` provee el uso de sesiones JMS y el `ProducerCallback` expone un par de `Sesion` y `MessageProducer`.
+
+El API JMS expone dos tipos de métodos de envío, una que lleva el modo de entrega, la prioridad y el tiempo a vivir como Calidad de Servicio (QoS) y uno que no toma parámetros de calidad de servicio que utiliza los valores por defecto.
+
+[IMPORTANT]
+====
+Las instancias de la clase JmsTemplate son hilos seguros una vez configurado. Esto es importante porque significa que se puede configurar una sola instancia de un JmsTemplate y luego de forma segura inyectar esta referencia compartida en múltiples colaboradores. Para ser claros, el JmsTemplate es stateful, ya que mantiene una referencia a un `ConnectionFactory`, pero este estado no es estado conversacional.
+====
+
+== Basado en el namespace XML
+
+
+
+== Basado en anotaciones
 
