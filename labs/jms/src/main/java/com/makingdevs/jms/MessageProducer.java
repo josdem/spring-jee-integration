@@ -2,6 +2,6 @@ package com.makingdevs.jms;
 
 import com.makingdevs.model.Project;
 
-public interface MyMessageProducer {
+public interface MessageProducer {
 	void heavyOperationForDelegationAndProcessing(Project project);
 }

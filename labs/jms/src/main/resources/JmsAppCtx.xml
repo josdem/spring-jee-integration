@@ -9,18 +9,9 @@
 
   <context:component-scan base-package="com.makingdevs.jms" />
 
-  <amq:broker useJmx="false" persistent="false">
-    <amq:transportConnectors>
-      <amq:transportConnector uri="tcp://localhost:0" />
-    </amq:transportConnectors>
-  </amq:broker>
+  
 
   <amq:connectionFactory id="jmsFactory" brokerURL="vm://localhost" />
-
-  <!--bean id="jmsFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
-    <property name="brokerURL"
-      value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false" />
-  </bean-->
 
   <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
     <property name="targetConnectionFactory" ref="jmsFactory" />
@@ -30,7 +21,7 @@
   
   <amq:queue id="queue" physicalName="makingDevsQueue"/>
 
-  <bean id="topico" class="org.apache.activemq.command.ActiveMQTopic">
+  <!--bean id="topico" class="org.apache.activemq.command.ActiveMQTopic">
     <property name="physicalName">
       <value>topic.cliente</value>
     </property>
@@ -40,7 +31,7 @@
     <property name="physicalName">
       <value>queue.cliente</value>
     </property>
-  </bean>
+  </bean-->
 
   <!-- Spring JMS Template -->
   <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -49,16 +40,15 @@
 
   <!-- Este componente usa el conexion factory para conectarse al topico 
     y escuchar mensajes -->
-  <bean id="listenerContainer"
+  <!--bean id="listenerContainer"
     class="org.springframework.jms.listener.DefaultMessageListenerContainer">
     <property name="connectionFactory" ref="connectionFactory" />
-    <property name="destination" ref="topico" />
-    <property name="messageListener" ref="myMessageListener" />
-  </bean>
+    <property name="destination" ref="queue" />
+    <property name="messageListener" ref="customMessageListener" />
+  </bean-->
 
-  <!--jms:listener-container connection-factory="connectionFactory" destination-type="topic" -->
-  <!-- jms:listener destination="topic.cliente" ref="myMessageListener"/ -->
-  <!--jms:listener destination="queue.cliente" ref="myMessageListener" / -->
-  <!-- /jms:listener-container -->
+  <jms:listener-container connection-factory="connectionFactory" destination-type="queue" >
+    <jms:listener destination="makingDevsQueue" ref="customMessageListener" />
+  </jms:listener-container>
 
 </beans>

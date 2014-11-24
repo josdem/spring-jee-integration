@@ -33,34 +33,84 @@ El `JmsTemplate` sólo necesita implementar retrollamadas en interfaces dado un 
 
 El API JMS expone dos tipos de métodos de envío, una que lleva el modo de entrega, la prioridad y el tiempo a vivir como Calidad de Servicio (QoS) y uno que no toma parámetros de calidad de servicio que utiliza los valores por defecto.
 
-[IMPORTANT]
+[TIP]
 ====
 Las instancias de la clase JmsTemplate son hilos seguros una vez configurado. Esto es importante porque significa que se puede configurar una sola instancia de un JmsTemplate y luego de forma segura inyectar esta referencia compartida en múltiples colaboradores. Para ser claros, el JmsTemplate es stateful, ya que mantiene una referencia a un `ConnectionFactory`, pero este estado no es estado conversacional.
 ====
 
 == ConnectionFactory
 
-El JmsTemplate requiere una referencia a un ConnectionFactory. El ConnectionFactory es parte de la especificación JMS y sirve como punto de entrada para trabajar con JMS. Es utilizado por la aplicación cliente como una fábrica para crear conexiones con el proveedor de JMS y encapsula varios parámetros de configuración, muchos de los cuales son específicos del proveedor, tales como las opciones de configuración SSLi u otras adicionales.
+El JmsTemplate requiere una referencia a un ConnectionFactory. El ConnectionFactory es parte de la especificación JMS y sirve como punto de entrada para trabajar con JMS. Es utilizado por la aplicación cliente como una fábrica para crear conexiones con el proveedor de JMS y encapsula varios parámetros de configuración, muchos de los cuales son específicos del proveedor, tales como las opciones de configuración SSL u otras adicionales.
 
 [NOTE]
 ====
-Para envair un mensaje generalmente la siguiente estructura de alambrado es necesaria:
+Para enviar un mensaje generalmente la siguiente estructura de alambrado es necesaria:
 ```
 ConnectionFactory->Connection->Session->MessageProducer->send
 ```
 ====
 
-
-
 === SingleConnectionFactory
+
+Spring proporciona una implementación de la interfaz `ConnectionFactory`, la cual es `SingleConnectionFactory`, que devolverá la misma conexión en todas las llamdas a `createConnection()` e ignorará las llamadas a `close()`. Esto es útil para pruebas y entornos independientes, de manera que la misma conexión puede ser utilizado para múltiples llamadas del JmsTemplate, y que puede abarcar cualquier número de transacciones. `SingleConnectionFactory toma una referencia a un `ConnectionFactory estándar que normalmente vendría de JNDI.
 
 === CachingConnectionFactory
 
+El `CachingConnectionFactory` amplía la funcionalidad del `SingleConnectionFactory` y añade el almacenamiento en caché de Sesiones, `MessageProducers` y `MessageConsumers`. El tamaño inicial de caché se establece en 1, usando la propiedad SessionCacheSize` se aumentará el número de sesiones en caché. Los `MessageProducers` y `MessageConsumers se almacenan en caché dentro de la sesión que las posee, y también tienen en cuenta las propiedades únicas de los productores y los consumidores. Los `MessageProducers` se almacenan en caché en función de su destino. Los `MessageConsumers` se almacenan en caché basado en una clave compuesta por el destino, el selector, la bandera de entrega noLocal, y el nombre de suscripciones durables (si se crearan consumidores durables).
+
+[source, xml]
+.ConnectionFactory
+----
+<bean id="jmsFactory" class="org.apache.activemq.spring.ActiveMQConnectionCactory">
+  <property name="brokerUrl"
+    value="vm://localhost?broker.persistent=false&amp;broker.usejmx=false" />
+</bean>
+
+<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionCactory">
+  <property name="targetConnectionFactory" ref="jmsFactory" />
+</bean>
+----
+
+== Topics y Queues
+
+Un **topic** en JMS implementa la semántica de _publish-subscribe_. Cuando se publica un mensaje va a todos los suscriptores quiénes están interesados, de tal forma que de cero a muchos recibirán la copia de dicho mensaje. Solamente los suscriptores que están activos al momento en que el broker recibe el mensaje obtendrán una copia del mensaje.
+
+Un **queue** en JMS implementa la semántica de un _load balancer_. Un mensaje unívoco será recibido por exactamente un consumidor. Si no hay consumidores disponibles en el momento en que el mensaje s enviado entonces se mantendrá hasta que exista alguno que pueda procesarlo. Si un consumidor recibe un mensaje y no da conocimiento antes de cerrarse entonces el mensaje será entregado a otro consumidor. Un **queu** puede tener muchos consumidores con mensajes en carga equilibrada en todos los consumidores disponibles.
+
+[source, xml]
+.Topics and Queues
+----
+<bean id="topic" class="org.apache.activemq.command.ActiveMQTopic">
+  <property name="physicalName" value="makingDevsTopic"/>
+</bean>
+
+<bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+  <property name="physicalName" value="makingDevsQueue"/>
+</bean>
+----
+
 == Message Listener Containers
+
+Un _message listener container_ se utiliza para recibir los mensajes de una cola de mensajes JMS y conducir el `MessageListener que se inyecta en el. El _listener container_ es responsable de todo el manejo de la recepción de mensajes y despachos en el _listener_ para su procesamiento. Un _message listener container_ es el intermediario entre un MDP y un proveedor de mensajería, y se encarga de registrar para recibir mensajes, participar en las operaciones, la adquisición de recursos y la liberación, la conversión excepción y cosas por el estilo. Esto le permite escribir la lógica de negocio(posiblemente compleja) asociada con la recepción de un mensaje (y posiblemente en respuesta a la misma), y delegar el código de plomería de infraestructura asociado a JMS al framework.
 
 === SimpleMessageListenerContainer
 
+Este _message listener_ es el más sencillo. Se crea un número fijo de sesiones JMS y consumidores en el arranque, registra el _listener_ utilizando el método estándar de JMS `MessageConsumer.setMessageListener()`, y deja en manos del proveedor de JMS el realizar devoluciones de llamadas de los _callbacks_. Esta variante no permite la adaptación dinámica a las demandas de tiempo de ejecución o para la participación en las transacciones gestionadas externamente.
+
 === DefaultMessageListenerContainer
+
+Este _message listener container_ es el utilizado en la mayoría de los casos. En contraste con `SimpleMessageListenerContainer`, esta variante contenedor permite la adaptación dinámica a las demandas de tiempo de ejecución y es capaz de participar en transacciones administradas externamente. Cada mensaje recibido se ha registrado en una transacción XA cuando se configura con un `JtaTransactionManager`; con lo que el procesamiento puede tomar ventaja de la semántica de transacción XA. Este _listener container_ logra un buen equilibrio entre los bajos requisitos de JMS, funcionalidad avanzada como la participación de la transacción, y la compatibilidad con los entornos Java EE.
+
+[source, xml]
+.connectionfactory
+----
+<bean id="listenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+  <property name="connectionFactory" ref="connectionFactory" />
+  <property name="destination" ref="queue" />
+  <property name="messageListener" ref="customMessageListener" />
+</bean>
+----
+
 
 == Basado en el namespace XML
 

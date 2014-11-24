@@ -13,16 +13,17 @@ import com.makingdevs.model.Project;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-@Component("myMessageListener")
-public class MyMessageListener implements MessageListener {
+@Component("customMessageListener")
+public class CustomMessageListener implements MessageListener {
   
-  private Log log = LogFactory.getLog(MyMessageListener.class);
+  private Log log = LogFactory.getLog(CustomMessageListener.class);
 	
 	@Override
 	public void onMessage(Message message) {
 		try {
 		  log.debug("Starting heavy process in JMS");
-			Thread.sleep(5000);
+		  Thread.sleep(1);
+			//Thread.sleep(5000);
 			for(int i=0;i<5000;i++){
 				Thread.sleep(10);
 				if(i%2==0)
@@ -33,6 +34,7 @@ public class MyMessageListener implements MessageListener {
 					System.out.print("/");
 				if(i%5==0)
 					System.out.print("-");
+				System.out.print("\b");
 			}
 		} catch (InterruptedException e) {
 		  log.error(e.getMessage());
