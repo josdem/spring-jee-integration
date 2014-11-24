@@ -1,1 +1,1 @@
-include 'repositoriesAndServices', 'web', 'mailer'
+include 'core', 'repositoriesAndServices', 'web', 'mailer', 'jms'

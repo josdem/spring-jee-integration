@@ -17,6 +17,12 @@ subprojects {
   }
 }
 
+project(":core"){
+  dependencies {
+    compile "org.hibernate:hibernate-entitymanager:4.3.1.Final"
+  }
+}
+
 project(":mailer"){
   dependencies {
     compile "org.springframework:spring-context-support:$springVersion"
@@ -33,11 +39,11 @@ project(":jms"){
 
 project(":repositoriesAndServices") {
   dependencies {
+    compile project(":core")
     compile "org.springframework:spring-context:$springVersion"
     compile "org.springframework:spring-orm:$springVersion"
     compile "org.springframework:spring-aspects:$springVersion"
 
-    compile "org.hibernate:hibernate-entitymanager:4.3.1.Final"
     def excludesList = ['slf4j-api','jcl-over-slf4j','spring-orm','spring-context','spring-aop','spring-tx','spring-beans','spring-core']
     compile("org.springframework.data:spring-data-jpa:1.4.3.RELEASE"){
       excludesList.each { m -> exclude module:m }
