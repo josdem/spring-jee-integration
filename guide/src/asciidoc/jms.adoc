@@ -38,6 +38,30 @@ El API JMS expone dos tipos de métodos de envío, una que lleva el modo de entr
 Las instancias de la clase JmsTemplate son hilos seguros una vez configurado. Esto es importante porque significa que se puede configurar una sola instancia de un JmsTemplate y luego de forma segura inyectar esta referencia compartida en múltiples colaboradores. Para ser claros, el JmsTemplate es stateful, ya que mantiene una referencia a un `ConnectionFactory`, pero este estado no es estado conversacional.
 ====
 
+== ConnectionFactory
+
+El JmsTemplate requiere una referencia a un ConnectionFactory. El ConnectionFactory es parte de la especificación JMS y sirve como punto de entrada para trabajar con JMS. Es utilizado por la aplicación cliente como una fábrica para crear conexiones con el proveedor de JMS y encapsula varios parámetros de configuración, muchos de los cuales son específicos del proveedor, tales como las opciones de configuración SSLi u otras adicionales.
+
+[NOTE]
+====
+Para envair un mensaje generalmente la siguiente estructura de alambrado es necesaria:
+```
+ConnectionFactory->Connection->Session->MessageProducer->send
+```
+====
+
+
+
+=== SingleConnectionFactory
+
+=== CachingConnectionFactory
+
+== Message Listener Containers
+
+=== SimpleMessageListenerContainer
+
+=== DefaultMessageListenerContainer
+
 == Basado en el namespace XML
 
 

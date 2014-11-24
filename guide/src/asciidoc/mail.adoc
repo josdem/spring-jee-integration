@@ -14,9 +14,13 @@ Debes de considerar tener en el _classpath_ de tu aplicación las bibliotecas de
 Recuerda usar tu administrador de dependencias. Por ejemplo, observa como queda nuestro archivo de construcción _build.gradle_:
 
 [source, groovy]
-.mailer/build.gradle
+.build.gradle
 ----
-include::{sourcedir}/mailer/build.gradle[]
+dependencies {
+  compile "org.springframework:spring-context-support:$springVersion"
+  compile 'com.sun.mail:javax.mail:1.5.2'
+  compile 'org.freemarker:freemarker:2.3.21'
+}
 ----
 ====
 

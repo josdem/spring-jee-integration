@@ -1,2 +1,7 @@
-includeFlat 'labs',
-        'guide'
+include 'labs'
+include 'guide'
+include 'labs:core'
+include 'labs:jms'
+include 'labs:mailer'
+include 'labs:repositoriesAndServices'
+include 'labs:web'

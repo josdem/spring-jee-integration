@@ -7,23 +7,23 @@
 :icons: font
 
 :leveloffset: 1
-include::src/asciidoc/welcome.adoc[]
+include::welcome.adoc[]
 
-include::src/asciidoc/mail.adoc[]
+include::mail.adoc[]
 
-include::src/asciidoc/jms.adoc[]
+include::jms.adoc[]
 
-include::src/asciidoc/quartz.adoc[]
+include::quartz.adoc[]
 
-include::src/asciidoc/jndi.adoc[]
+include::jndi.adoc[]
 
-include::src/asciidoc/rest_template.adoc[]
+include::rest_template.adoc[]
 
-include::src/asciidoc/webservices_soap.adoc[]
+include::webservices_soap.adoc[]
 
-include::src/asciidoc/cache.adoc[]
+include::cache.adoc[]
 
-include::src/asciidoc/monitoring.adoc[]
+include::monitoring.adoc[]
 
-include::src/asciidoc/thanks.adoc[]
+include::thanks.adoc[]
 

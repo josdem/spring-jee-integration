@@ -1,4 +1,4 @@
-package com.makingdevs.curso.jms.impl;
+package com.makingdevs.jms.impl;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -11,8 +11,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import com.makingdevs.asembly.vo.Cliente;
-import com.makingdevs.curso.jms.MyMessageProducer;
+import com.makingdevs.jms.MyMessageProducer;
+import com.makingdevs.model.Project;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -22,14 +22,14 @@ public class MessageProducerImpl implements MyMessageProducer {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	@Autowired
-	private Destination topico;
+	private Destination destination;
 	
 	@Override
-	public void operacionPesadaConCliente(Cliente cliente) {
+	public void heavyOperationForDelegationAndProcessing(Project project) {
 		XStream stream = new XStream(new DomDriver());
-		final String xml = stream.toXML(cliente);
+		final String xml = stream.toXML(project);
 		
-		jmsTemplate.send(topico, new MessageCreator() {
+		jmsTemplate.send(destination, new MessageCreator() {
 			public Message createMessage(Session session) throws JMSException {
 				TextMessage message = session.createTextMessage();
 				message.setText(xml);
