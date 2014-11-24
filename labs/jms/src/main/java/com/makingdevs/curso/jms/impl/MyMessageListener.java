@@ -1,4 +1,4 @@
-package com.synergyj.curso.jms.impl;
+package com.makingdevs.curso.jms.impl;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -8,7 +8,7 @@ import javax.jms.TextMessage;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.stereotype.Component;
 
-import com.synergyj.asembly.vo.Cliente;
+import com.makingdevs.asembly.vo.Cliente;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 

@@ -25,6 +25,12 @@ project(":mailer"){
   }
 }
 
+project(":jms"){
+  dependencies {
+    compile 'org.springframework:spring-jms:4.0.0.RELEASE'
+  }
+}
+
 project(":repositoriesAndServices") {
   dependencies {
     compile "org.springframework:spring-context:$springVersion"

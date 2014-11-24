@@ -1,4 +1,4 @@
-package com.synergyj.curso.jms.impl;
+package com.makingdevs.curso.jms.impl;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -11,8 +11,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import com.synergyj.asembly.vo.Cliente;
-import com.synergyj.curso.jms.MyMessageProducer;
+import com.makingdevs.asembly.vo.Cliente;
+import com.makingdevs.curso.jms.MyMessageProducer;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
