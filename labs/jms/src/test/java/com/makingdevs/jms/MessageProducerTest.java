@@ -18,11 +18,6 @@ public class MessageProducerTest {
   @Test
   public void testMessageProducer() {
     messageProducer.heavyOperationForDelegationAndProcessing(new Project());
-    try {
-      Thread.sleep(3000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
   }
 
 }

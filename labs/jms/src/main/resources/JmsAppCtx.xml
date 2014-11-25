@@ -2,14 +2,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
   xmlns:amq="http://activemq.apache.org/schema/core" xmlns:jms="http://www.springframework.org/schema/jms"
-  xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+  xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
   <context:component-scan base-package="com.makingdevs.jms" />
 
-  
+  <amq:broker useJmx="false" persistent="false">
+    <amq:transportConnectors>
+      <amq:transportConnector uri="tcp://localhost:0" />
+    </amq:transportConnectors>
+  </amq:broker>
 
   <amq:connectionFactory id="jmsFactory" brokerURL="vm://localhost" />
 
@@ -21,31 +25,9 @@
   
   <amq:queue id="queue" physicalName="makingDevsQueue"/>
 
-  <!--bean id="topico" class="org.apache.activemq.command.ActiveMQTopic">
-    <property name="physicalName">
-      <value>topic.cliente</value>
-    </property>
-  </bean>
-
-  <bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
-    <property name="physicalName">
-      <value>queue.cliente</value>
-    </property>
-  </bean-->
-
-  <!-- Spring JMS Template -->
   <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
     <property name="connectionFactory" ref="connectionFactory" />
   </bean>
-
-  <!-- Este componente usa el conexion factory para conectarse al topico 
-    y escuchar mensajes -->
-  <!--bean id="listenerContainer"
-    class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-    <property name="connectionFactory" ref="connectionFactory" />
-    <property name="destination" ref="queue" />
-    <property name="messageListener" ref="customMessageListener" />
-  </bean-->
 
   <jms:listener-container connection-factory="connectionFactory" destination-type="queue" >
     <jms:listener destination="makingDevsQueue" ref="customMessageListener" />

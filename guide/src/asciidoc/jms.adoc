@@ -111,9 +111,35 @@ Este _message listener container_ es el utilizado en la mayoría de los casos. E
 </bean>
 ----
 
+=== Envío de mensajes con JmsTemplate
+
+[source, java]
+.La interfaz de negocio MessageProducer
+----
+include::{sourcedir}/jms/src/main/java/com/makingdevs/jms/MessageProducer.java[]
+----
+
+[source, java]
+.Uso de JmsTemplate
+----
+include::{sourcedir}/jms/src/main/java/com/makingdevs/jms/impl/MessageProducerImpl.java[]
+----
+
+=== Consumo de mensajes
+
+[source, java]
+.Consumiendo mensajes con MessageListener
+----
+include::{sourcedir}/jms/src/main/java/com/makingdevs/jms/impl/CustomMessageListener.java[]
+----
 
 == Basado en el namespace XML
 
+[source, xml]
+.JmsAppCtx.xml
+----
+include::{sourcedir}/jms/src/main/resources/JmsAppCtx.xml[]
+----
 
 
 == Basado en anotaciones

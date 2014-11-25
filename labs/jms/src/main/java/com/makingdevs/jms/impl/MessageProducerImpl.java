@@ -22,28 +22,28 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 @Service("messageProducer")
 public class MessageProducerImpl implements MessageProducer {
 
-	@Autowired
-	private JmsTemplate jmsTemplate;
-	@Autowired
-	@Qualifier("queue")
-	private Destination destination;
-	
-	private Log log = LogFactory.getLog(MessageProducerImpl.class);
-	
-	@Override
-	public void heavyOperationForDelegationAndProcessing(Project project) {
-	  log.debug("Sending message: ");
-		XStream stream = new XStream(new DomDriver());
-		final String xml = stream.toXML(project);
-		log.debug("Message: " + xml);
-		jmsTemplate.send(destination, new MessageCreator() {
-			public Message createMessage(Session session) throws JMSException {
-				TextMessage message = session.createTextMessage();
-				message.setText(xml);
-				return message;
-			}
-		});
-		
-	}
-	
+  @Autowired
+  private JmsTemplate jmsTemplate;
+  @Autowired
+  @Qualifier("queue")
+  private Destination destination;
+
+  private Log log = LogFactory.getLog(MessageProducerImpl.class);
+
+  @Override
+  public void heavyOperationForDelegationAndProcessing(Project project) {
+    log.debug("Sending message: ");
+    XStream stream = new XStream(new DomDriver());
+    final String xml = stream.toXML(project);
+    log.debug("Message: " + xml);
+    jmsTemplate.send(destination, new MessageCreator() {
+      public Message createMessage(Session session) throws JMSException {
+        TextMessage message = session.createTextMessage();
+        message.setText(xml);
+        return message;
+      }
+    });
+
+  }
+
 }
