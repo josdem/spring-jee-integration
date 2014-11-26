@@ -33,7 +33,7 @@ public class CustomMessageListener implements MessageListener {
         xml = mensaje.getText();
         XStream stream = new XStream(new DomDriver());
         Project project = (Project)stream.fromXML(xml);
-        delegationService.processProject(project);
+        delegationService.processProject(project); // <1>
       } catch (JMSException e) {
         log.error(e.getMessage());
       }

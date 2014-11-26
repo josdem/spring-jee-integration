@@ -132,6 +132,7 @@ include::{sourcedir}/jms/src/main/java/com/makingdevs/jms/impl/MessageProducerIm
 ----
 include::{sourcedir}/jms/src/main/java/com/makingdevs/jms/impl/CustomMessageListener.java[]
 ----
+<1> Este servicio manda el procesamiento a otro elemento donde se puede manejar puramente
 
 == Basado en el namespace XML
 
