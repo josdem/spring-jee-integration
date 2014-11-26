@@ -43,7 +43,7 @@ public class MessageProducerImpl implements MessageProducer {
         return message;
       }
     });
-
+    log.debug("Message sent... ");
   }
 
 }

@@ -23,7 +23,7 @@ project("guide"){
   }
 }
 
-ext.springVersion = "4.0.0.RELEASE"
+ext.springVersion = "4.1.2.RELEASE"
 
 subprojects {
   apply plugin:"java"
@@ -59,11 +59,11 @@ project(":labs:mailer"){
 
 project(":labs:jms"){
   dependencies {
-    compile project(":labs:core")
+    compile project(":labs:repositoriesAndServices")
     compile 'org.apache.activemq:activemq-all:5.10.0'
     compile 'org.apache.activemq:activemq-spring:5.10.0'
     compile 'com.thoughtworks.xstream:xstream:1.4.7'
-    compile 'org.springframework:spring-jms:4.0.0.RELEASE'
+    compile "org.springframework:spring-jms:$springVersion"
   }
 }
 

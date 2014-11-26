@@ -11,6 +11,8 @@
     <param-value>
       classpath:/PersistenceAppCtx.xml,
       classpath:/ServicesAppCtx.xml,
+      classpath:/TxAppCtx.xml,
+      classpath:/JmsAppCtx.xml
     </param-value>
   </context-param>
 

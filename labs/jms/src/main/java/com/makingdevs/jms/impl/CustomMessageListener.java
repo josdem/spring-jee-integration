@@ -7,8 +7,10 @@ import javax.jms.TextMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.makingdevs.jms.DelegationService;
 import com.makingdevs.model.Project;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -17,27 +19,13 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public class CustomMessageListener implements MessageListener {
 
   private Log log = LogFactory.getLog(CustomMessageListener.class);
+  
+  @Autowired
+  private DelegationService delegationService;
 
   @Override
   public void onMessage(Message message) {
-    try {
-      log.debug("Starting heavy process in JMS");
-      Thread.sleep(1);
-      for(int i=0;i<5000;i++){
-        Thread.sleep(10);
-        if(i%2==0)
-          System.out.print("\\");
-        if(i%3==0)
-          System.out.print("|");
-        if(i%4==0)
-          System.out.print("/");
-        if(i%5==0)
-          System.out.print("-");
-        System.out.print("\b");
-      }
-    } catch (InterruptedException e) {
-      log.error(e.getMessage());
-    }
+    log.debug("Starting heavy process in JMS!!!");
     if(message instanceof TextMessage) {
       TextMessage mensaje = (TextMessage)message;
       String xml = "";
@@ -45,10 +33,11 @@ public class CustomMessageListener implements MessageListener {
         xml = mensaje.getText();
         XStream stream = new XStream(new DomDriver());
         Project project = (Project)stream.fromXML(xml);
-        log.debug(project);
+        delegationService.processProject(project);
       } catch (JMSException e) {
         log.error(e.getMessage());
       }
     }
+    log.debug("Message processed!!!");
   }
 }

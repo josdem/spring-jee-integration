@@ -21,16 +21,16 @@
     <property name="targetConnectionFactory" ref="jmsFactory" />
   </bean>
   
-  <amq:topic id="topic" physicalName="makingDevsTopic" />
+  <amq:topic id="topic" physicalName="com.makingdevs.topic" />
   
-  <amq:queue id="queue" physicalName="makingDevsQueue"/>
+  <amq:queue id="queue" physicalName="com.makingdevs.queue"/>
 
   <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
     <property name="connectionFactory" ref="connectionFactory" />
   </bean>
 
   <jms:listener-container connection-factory="connectionFactory" destination-type="queue" >
-    <jms:listener destination="makingDevsQueue" ref="customMessageListener" />
+    <jms:listener destination="com.makingdevs.queue" ref="customMessageListener" />
   </jms:listener-container>
 
 </beans>

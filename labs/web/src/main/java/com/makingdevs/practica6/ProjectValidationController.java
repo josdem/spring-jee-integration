@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.makingdevs.jms.MessageProducer;
 import com.makingdevs.model.Project;
 import com.makingdevs.repositories.ProjectRepository;
 import com.makingdevs.services.ProjectService;
@@ -22,8 +23,10 @@ public class ProjectValidationController {
   @Autowired
   ProjectRepository projectRepository;
 
+  //@Autowired
+  //ProjectService projectService;
   @Autowired
-  ProjectService projectService;
+  MessageProducer messageProducer;
 
   @RequestMapping("/project")
   public String allProjects(Model model) {
@@ -45,7 +48,8 @@ public class ProjectValidationController {
       mv.getModel().put("project", project);
       return mv;
     } else {
-      projectService.createNewProject(project);
+      //projectService.createNewProject(project);
+      messageProducer.heavyOperationForDelegationAndProcessing(project);
       return new ModelAndView("redirect:/project");
     }
   }

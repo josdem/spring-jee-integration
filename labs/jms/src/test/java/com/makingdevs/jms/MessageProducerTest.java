@@ -9,9 +9,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.makingdevs.model.Project;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:JmsAppCtx.xml"})
+@ContextConfiguration(locations = {"classpath:PersistenceAppCtx.xml",
+    "classpath:ServicesAppCtx.xml", "classpath:TxAppCtx.xml",
+    "classpath:JmsAppCtx.xml"})
 public class MessageProducerTest {
-  
+
   @Autowired
   private MessageProducer messageProducer;
 

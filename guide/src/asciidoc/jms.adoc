@@ -141,6 +141,10 @@ include::{sourcedir}/jms/src/main/java/com/makingdevs/jms/impl/CustomMessageList
 include::{sourcedir}/jms/src/main/resources/JmsAppCtx.xml[]
 ----
 
+=== Testing JmsTemplate
 
-== Basado en anotaciones
-
+[source, java]
+.MessageProducerTest
+----
+include::{sourcedir}/jms/src/test/java/com/makingdevs/jms/MessageProducerTest.java[]
+----
