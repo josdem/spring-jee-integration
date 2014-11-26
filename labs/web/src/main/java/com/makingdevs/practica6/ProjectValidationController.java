@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.makingdevs.jms.MessageProducer;
 import com.makingdevs.model.Project;
 import com.makingdevs.repositories.ProjectRepository;
-import com.makingdevs.services.ProjectService;
 
 @Controller
 public class ProjectValidationController {

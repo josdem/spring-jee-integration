@@ -149,3 +149,44 @@ include::{sourcedir}/jms/src/main/resources/JmsAppCtx.xml[]
 ----
 include::{sourcedir}/jms/src/test/java/com/makingdevs/jms/MessageProducerTest.java[]
 ----
+
+== Integración con el proyecto Web
+
+[source, xml]
+.Recuerda agregar la configuración
+----
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:/PersistenceAppCtx.xml,
+      classpath:/ServicesAppCtx.xml,
+      classpath:/TxAppCtx.xml,
+      classpath:/JmsAppCtx.xml // <1>
+    </param-value>
+  </context-param>
+----
+<1> Agrega la configuración necesaria en donde la consideres pertinente
+
+[source, java]
+.Cambia el uso de los beans
+----
+@Controller
+public class ProjectValidationController {
+
+  // More code...
+
+  //@Autowired
+  //ProjectService projectService;
+  @Autowired
+  MessageProducer messageProducer;
+
+  @RequestMapping(value = "/saveProject", method = RequestMethod.POST)
+  public ModelAndView saveProject(@Valid Project project, BindingResult binding) {
+      // More code...
+      //projectService.createNewProject(project);
+      messageProducer.heavyOperationForDelegationAndProcessing(project);
+      // More code...
+    }
+  }
+}
+----
