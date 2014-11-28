@@ -23,8 +23,76 @@ El `TaskExecutor` fue originalmente creado para darle a otros componentes de Spr
 * `TimerTaskExecutor` Usa solo un `TimerTask`
 * `WorkManagerTaskExecutor` Usa CommonJWorkManager
 
-== Con XML declarativo y con namespaces
+.Iniciando el AppCtx para ejecutar Jobs
+****
+Para iniciar los Jobs dentro de una aplicación es suficiente con tener una JVM en donde se levante el AppCtx, mientras este vivo los Jobs serán ejecutados, una vez que termine todo se perderá.
 
-== Con anotaciones
+[source, groovy]
+.Dependencias necesarias para ejecutar este ejercicio
+----
+include::{sourcedir}/../build.gradle[tags=jobs]
+----
+****
 
+[source, xml]
+.Uso del ContextLoaderListener
+----
+include::{sourcedir}/jobs/src/main/webapp/WEB-INF/web.xml[]
+----
+<1> Nótese como usamos un AppCtx donde levantaremos la configuración de procesos calendarizados
 
+== Configuración manual con XML
+
+[source, java]
+.Definición de un bean como un Job
+----
+include::{sourcedir}/jobs/src/main/java/com/makingdevs/jobs/impl/SimpleScheduledJobImpl.java[]
+----
+
+[source, xml]
+.Configuración esencial - Quartz1AppCtx.xml
+----
+include::{sourcedir}/jobs/src/main/resources/Quartz1AppCtx.xml[]
+----
+
+== Uso del namespace `task`
+
+[source, java]
+.Definición de un bean de Spring como Job
+----
+include::{sourcedir}/jobs/src/main/java/com/makingdevs/jobs/impl/SystemScheduledJobImpl.java[]
+----
+
+[source, xml]
+.Configuración esencial - Quartz2AppCtx.xml
+----
+include::{sourcedir}/jobs/src/main/resources/Quartz2AppCtx.xml[]
+----
+
+== Creación de Jobs con anotaciones
+
+[source, java]
+.Anotación de una clase para ser definida como un Job
+----
+include::{sourcedir}/jobs/src/main/java/com/makingdevs/jobs/impl/MultiplesScheduledJobsImpl.java[]
+----
+
+[source, xml]
+.Configuración esencial - Quartz2AppCtx.xml
+----
+include::{sourcedir}/jobs/src/main/resources/Quartz3AppCtx.xml[]
+----
+
+== Uso de JavaConfig para usar calendarización de tareas
+
+[source, java]
+.Configuración con JavaConfig
+----
+include::{sourcedir}/jobs/src/main/java/com/makingdevs/jobs/impl/ScheduledJobConfig.java[]
+----
+
+[TIP]
+.Especialización de la configuración
+====
+Eres libre de escoger las anotaciones relevantes para tu aplicación. Por ejemplo, si solamente necesitas soporte para `@Scheduled`, simplemente omite `@EnableAsync`. Para un control más detallado como lo es con el esquema de **tx** se pueden implementar las interfaces `SchedulingConfigurer` y/o `AsyncConfigurer`.
+====

@@ -32,7 +32,14 @@ ____
 
 == Objetivo del entrenamiento
 
-* Objetivos del entrenmiento
+* Objetivos del entrenamiento
+** Integrar otras tecnologías con Spring
+** Mejorar a través de técnicas adicionales nuestras aplicaciones con Spring
+** Monitorear el rendimiento de nuestras aplicaciones
+** Calendarizar procesos automáticos
+** Abstraer tecnología en la arquitectura de las aplicaciones
+** Consumir servicios externos
+** Escalar aplicaciones con infrestructura proveída por Spring
 
 == Consideraciones
 

@@ -11,12 +11,11 @@
     <param-value>
       classpath:/PersistenceAppCtx.xml,
       classpath:/ServicesAppCtx.xml,
-      classpath:/Quartz4AppCtx.xml
+      classpath:/TxAppCtx.xml,
+      classpath:/Quartz1AppCtx.xml <!--1-->
     </param-value>
   </context-param>
 
-  <!-- Deshabilita en el contenedor de Servlet el manejo de archivo de bienvenida. 
-    Necesario para la compatibilidad con Servlet 3.0 y Tomcat 7.0 -->
   <welcome-file-list>
     <welcome-file></welcome-file>
   </welcome-file-list>

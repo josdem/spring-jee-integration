@@ -110,6 +110,7 @@ project(":labs:web") {
   }
 }
 
+// tag::jobs[]
 project(":labs:jobs"){
   apply plugin: 'war'
   apply plugin:"jetty"
@@ -125,3 +126,4 @@ project(":labs:jobs"){
     compile 'org.quartz-scheduler:quartz:2.2.1'
   }
 }
+// end::jobs[]
