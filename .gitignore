@@ -12,3 +12,4 @@
 activemq-data/
 labs/jms/.gitignore
 **/trackbox.log*
+**/.springBeans

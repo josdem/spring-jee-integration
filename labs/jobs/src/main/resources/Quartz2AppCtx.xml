@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:task="http://www.springframework.org/schema/task"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+  <context:component-scan base-package="com.makingdevs.jobs.impl" />
+
+  <task:scheduler id="scheduler" pool-size="10"/>
+  
+  <task:executor id="executor" pool-size="5"/>
+  
+  <task:scheduled-tasks>
+    <task:scheduled ref="systemScheduledJob" method="generateAndSendSystemInfo" cron="50 0/1 * * * ?"/>
+    <task:scheduled ref="systemScheduledJob" method="checkTasksDoneAndPending" cron="10 0/1 * * * ?"/>
+  </task:scheduled-tasks>
+
+<!--
+CronTrigger Example 1 - an expression to create a trigger that simply fires every 5 minutes
+
+"0 0/5 * * * ?"
+
+CronTrigger Example 2 - an expression to create a trigger that fires every 5 minutes, at 10 seconds after the minute (i.e. 10:00:10 am, 10:05:10 am, etc.).
+
+"10 0/5 * * * ?"
+
+CronTrigger Example 3 - an expression to create a trigger that fires at 10:30, 11:30, 12:30, and 13:30, on every Wednesday and Friday.
+
+"0 30 10-13 ? * WED,FRI"
+
+CronTrigger Example 4 - an expression to create a trigger that fires every half hour between the hours of 8 am and 10 am on the 5th and 20th of every month. Note that the trigger will NOT fire at 10:00 am, just at 8:00, 8:30, 9:00 and 9:30
+
+"0 0/30 8-9 5,20 * ?"
+    
+-->
+
+</beans>
