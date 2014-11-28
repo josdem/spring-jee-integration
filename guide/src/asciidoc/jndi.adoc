@@ -75,7 +75,10 @@ Sin embargo con el uso del namespace puede quedar de la siguiente manera:
 .Es tu turno
 ====
 Descarga https://glassfish.java.net/es/downloads/3.0.1-final.html[Glassfish] como servidor de aplicaciones y configura alguno de los siguientes beans como recurso para usarlo dentro de la aplicación:
+
 * El DataSource
 * El Broker de JMS
 * MailConfiguration
+
+Te recomendamos ampliamente el uso de profiles con Gradle y Spring.
 ====
