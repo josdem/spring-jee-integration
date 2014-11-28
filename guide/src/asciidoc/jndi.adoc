@@ -2,3 +2,80 @@
 = Despliegues en servidores de aplicaciones
 
 == JNDI
+
+Los tags del namespace **jee** tratan con la configuración de recursos JEE, tales como la búsqueda de JNDI y la definición de refrencias a EJB's. Para usarlo tenemos que agregar el esquema particular para comenzar a usarlo.
+
+
+[source, xml]
+.JEE namespace
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jee="http://www.springframework.org/schema/jee" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd"> <!-- bean definitions here -->
+
+</beans>
+----
+
+La clase principal que ayuda a la implementación de esta configuración se llama http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jndi/JndiObjectFactoryBean.html[`JndiObjectFactoryBean`], su uso será crear un factory para un singleton y referenciarlo a través del AppCtx. Si deseáramos usarlo tendría que ser de la siguiente forma:
+
+[source, xml]
+.Usando el JndiObjectFactoryBean
+----
+<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"><!--1-->
+    <property name="jndiName" value="jdbc/MyDataSource"/>
+</bean>
+<bean id="userDao" class="com.makingdevs.JdbcUserDao">
+    <!-- Spring will do the cast automatically (as usual) -->
+    <property name="dataSource" ref="dataSource"/>
+</bean>
+----
+<1> Nótese el uso de un DataSource que será inyectado en todos los DAO's o Repositories
+
+Sin embargo con el uso del namespace puede quedar de la siguiente manera:
+
+[source, xml]
+.Usando el namespace jee
+----
+<jee:jndi-lookup id="dataSource" jndi-name="jdbc/MyDataSource"/>
+
+<bean id="userDao" class="com.makingdevs.JdbcUserDao">
+    <property name="dataSource" ref="dataSource"/>
+</bean>
+----
+
+== Variantes del uso de JEE
+
+[source, xml]
+.Namespace jee con configuraciones de entorno
+----
+<jee:jndi-lookup id="simple" jndi-name="jdbc/MyDataSource">
+    <jee:environment>
+        foo=bar
+        ping=pong
+    </jee:environment>
+</jee:jndi-lookup>
+----
+
+[source, xml]
+.Namespace jee con configuraciones explícitas
+----
+<jee:jndi-lookup id="simple"
+        jndi-name="jdbc/MyDataSource"
+        cache="true"
+        resource-ref="true"
+        lookup-on-startup="false"
+        expected-type="com.makingdevs.DefaultFoo"
+        proxy-interface="com.makingdevs.Foo"/>
+----
+
+[IMPORTANT]
+.Es tu turno
+====
+Descarga https://glassfish.java.net/es/downloads/3.0.1-final.html[Glassfish] como servidor de aplicaciones y configura alguno de los siguientes beans como recurso para usarlo dentro de la aplicación:
+* El DataSource
+* El Broker de JMS
+* MailConfiguration
+====
