@@ -1,11 +1,17 @@
 package com.makingdevs.jobs.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.makingdevs.jobs.MultiplesScheduledJobs;
 
+@Component
 public class MultiplesScheduledJobsImpl implements MultiplesScheduledJobs {
+  
+  private Log log = LogFactory.getLog(MultiplesScheduledJobsImpl.class);
 
   @Async
   @Scheduled(cron="20 0/1 * * * ?")
@@ -31,14 +37,14 @@ public class MultiplesScheduledJobsImpl implements MultiplesScheduledJobs {
 
   private void theSameJobWithNameAndCode(String name, String code) {
     try {
-      System.out.println("Initiating " + name + "...");
+      log.debug("Initiating " + name + "...");
       for (int i = 0; i < 1500; i++) {
-        System.out.print(code + " ");
+        log.debug(code + " ");
         Thread.sleep(10);
       }
-      System.out.println("Finishing " + name + "...");
+      log.debug("Finishing " + name + "...");
     } catch (InterruptedException e) {
-      System.out.println(e.getMessage());
+      log.error(e.getMessage());
     }
   }
 

@@ -2,6 +2,8 @@ package com.makingdevs.jobs.impl;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,8 @@ import com.makingdevs.repositories.UserStoryRepository;
 
 @Component("systemScheduledJob")
 public class SystemScheduledJobImpl implements SystemScheduledJob {
+  
+  private Log log = LogFactory.getLog(SystemScheduledJobImpl.class);
 
   @Autowired
   ProjectRepository projectRepository;
@@ -42,7 +46,7 @@ public class SystemScheduledJobImpl implements SystemScheduledJob {
         }
       }
     }
-    System.out.println(s.toString());
+    log.debug(s.toString());
   }
 
   @Override
@@ -53,7 +57,7 @@ public class SystemScheduledJobImpl implements SystemScheduledJob {
       if (t.getStatus() == TaskStatus.TODO || t.getStatus() == TaskStatus.WIP)
         s.append("* " + t.getDescription() + " - " + t.getStatus() + "\n");
     }
-    System.out.println(s.toString());
+    log.debug(s.toString());
   }
 
 }
