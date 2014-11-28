@@ -1,2 +1,83 @@
 
-= Ejercicio - Monitoreo de la aplicación
+= Monitoreo de la aplicación
+
+== JavaMelody
+
+El objetivo de https://code.google.com/p/javamelody/[JavaMelody] es monitorear aplicaciones Java o JEE en servidores con ambientes de QA o Producción. No es una herramienta para simular solicitudes de usuario. Es una herramienta para medir y calcular estadísticas sobre la operación real de una aplicación dependiendo de su uso.
+
+Es fácil de integrar en la mayoría de las aplicaciones y es ligero(sin profiling ni base de datos). Está basado principalmente en estadísticas de solicitudes y gráficas que evolucionan. En ambientes de QA y producciçon ayuda a:
+
+* dar datos sobre el promedio de los tiempos de respuesta y número de ejecuciones
+* tomar decisiones cuando las tendencias son malas, antes que los problemas sean demasiado graves
+* optimizar en base a los tiempos de respuesta más limitantes
+* encontrar las causas profundas de los tiempos de respuesta
+* verificar la mejora real después de optimizaciones
+
+Incluye gráficos de resumen que muestra la evolución en el tiempo de los siguientes indicadores:
+
+* Número de ejecuciones, significa tiempos de ejecución y el porcentaje de errores de peticiones http, solicitudes SQL, páginas JSP o métodos de fachadas de negocios (Spring o Guice)
+* memoria Java
+* CPU Java
+* Número de sesiones de usuario
+* Número de conexiones JDBC
+
+[[img-javamelody]] 
+.Gráficas en JavaMelody 
+image::http://javamelody.googlecode.com/svn/trunk/javamelody-core/src/site/resources/screenshots/graphs.png[]
+
+== ¿Qué necesitamos?
+
+== La dependencia de JavaMelody
+
+[source, groovy]
+.build.gradle
+----
+compile 'net.bull.javamelody:javamelody-core:1.53.0'
+----
+
+=== Modificar el web.xml
+
+[source, xml]
+.Configuración con JavaConfig
+----
+  <filter>
+    <filter-name>monitoring</filter-name>
+    <filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>monitoring</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>net.bull.javamelody.SessionListener</listener-class>
+  </listener>
+----
+
+=== El DataSource
+
+La clase `net.bull.javamelody.SpringDataSourceBeanPostProcessor` tiene todo lo necesario para monitorear el `DataSource` si estamos usando Spring.
+
+[source, xml]
+.build.gradle
+----
+<bean id="springDataSourceBeanPostProcessor" class="net.bull.javamelody.SpringDataSourceBeanPostProcessor" />
+----
+
+=== Un advice de monitoreo
+
+La clase `net.bull.javamelody.MonitoringSpringInterceptor` es un advice del tipo _around_ que permitirá interceptar las llamadas de los elementos que nosotros indiquemos con un pointcut.
+
+[source, xml]
+.build.gradle
+----
+<bean id="monitoringAdvice" class="net.bull.javamelody.MonitoringSpringInterceptor" />
+<aop:config>
+  <aop:pointcut expression="execution(* com.makingdevs.service..**.*(..))"
+    id="monitoringPointcut" />
+  <aop:advisor advice-ref="monitoringAdvice" pointcut-ref="monitoringPointcut" />
+</aop:config>
+----
+
+NOTE: Una vez configurado estos elementos, de hecho, desde sólo el listener, se pueden observar resultados en la url de la aplicación, por ejemplo: http://localhost:8080/trackbox/monitoring
