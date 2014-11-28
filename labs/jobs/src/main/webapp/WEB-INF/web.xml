@@ -11,7 +11,7 @@
     <param-value>
       classpath:/PersistenceAppCtx.xml,
       classpath:/ServicesAppCtx.xml,
-      classpath:/Quartz3AppCtx.xml
+      classpath:/Quartz4AppCtx.xml
     </param-value>
   </context-param>
 
