@@ -108,5 +108,20 @@ project(":labs:web") {
     compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
     compile 'com.lowagie:itext:4.2.1'
   }
+}
 
+project(":labs:jobs"){
+  apply plugin: 'war'
+  apply plugin:"jetty"
+  httpPort = 8081
+  jettyRun {
+    contextPath = 'jobs'
+  }
+  dependencies {
+    compile project(":labs:repositoriesAndServices")
+    compile "org.springframework:spring-web:$springVersion"
+    compile "org.springframework:spring-context-support:$springVersion"
+    compile "org.springframework:spring-tx:$springVersion"
+    compile 'org.quartz-scheduler:quartz:2.2.1'
+  }
 }

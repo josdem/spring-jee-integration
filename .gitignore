@@ -11,4 +11,4 @@
 /build/
 activemq-data/
 labs/jms/.gitignore
-**/trackbox.log
+**/trackbox.log*
