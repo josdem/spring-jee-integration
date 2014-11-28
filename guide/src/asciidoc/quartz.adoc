@@ -1,6 +1,28 @@
 
 = Ejecución de tareas y calendarización con Quartz
 
+SpringFramework proporciona abstracciones para la ejecución asíncrona y la programación de tareas con las interfaces `TaskExecutor` y `TaskScheduler`, respectivamente. Cuenta con las implementaciones de las interfaces que soportan _thread pools_ o delegación a https://docs.oracle.com/cd/E13222_01/wls/docs92/commonj/commonj.html[CommonJ] dentro de un servidor de aplicaciones. En última instancia el uso de estas implementaciones detrás de las interfaces comunes abstrae las diferencias entre Java SE 5, Java SE 6 y entornos Java EE.
+
+Spring también cuenta con la integración para apoyar la programación con la clase `Timer`, parte del JDK desde 1,3, y el https://github.com/TechMindsMX[Quartz Scheduler]. Ambos programadores se configuran utilizando un _FactoryBean_ con referencias opcionales a instancias de `Timer` o de `Trigger`. Por otra parte, una clase de conveniencia tanto para Quartz y el _Timer_ permite invocar un método de un objeto existente como destino(análogo al funcionamiento normal `MethodInvokingFactoryBean`).
+
+== Spring TaskExecutor
+
+Spring 2.0 introduce una nueva abstracción para tratar a los **executors**. Los **Executors** son el nombre de Java 5 para el concepto de grupos de subprocesos(thread pool). La denominación "executor" es debido al hecho de que no hay garantía de que la implementación subyacente es en realidad un _pool_; un _executor_ puede ser de un único subproceso o incluso síncrono. Spring esconde detalles de implementación entre Java SE 1.4, Java SE 5 y entornos Java EE.
+
+La interface de Spring `TaskExecutor` es idéntica a la interface `java.util.concurrent.Executor`. De hecho, la razón principal para la existencia de esta interfaz fue quitar la abstracción de la necesidad de Java 5 por usar un _thread pool_. La interface tiene un sólo método `execute` (Runnable task) que acepta una tarea para la ejecución basada en la semántica y configuración de un _thread pool_.
+
+El `TaskExecutor` fue originalmente creado para darle a otros componentes de Spring una abstracción para el _thread pooling_ cuando sea necesario.
+
+=== Tipos de TaskExecutor
+
+* `SimpleAsyncTaskExecutor` No reusa threads, comienza uno en cada invocación
+* `SyncTaskExecutor` No es asíncrono
+* `ConcurrentTaskExecutor` Es un wrapper de `java.util.concurrent.Executor`
+* `SimpleThreadPoolTaskExecutor` Es una subclase de `SimpleThreadPool`, es compartida por componentes `Quartz` y `Timer`
+* `ThreadPoolTaskExecutor` Solo Java5, usa `java.util.concurrent.ThreadPoolExecutor` y es un wrapper de `TaskExecutor`
+* `TimerTaskExecutor` Usa solo un `TimerTask`
+* `WorkManagerTaskExecutor` Usa CommonJWorkManager
+
 == Con XML declarativo y con namespaces
 
 == Con anotaciones

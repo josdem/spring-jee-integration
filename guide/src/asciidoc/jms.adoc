@@ -178,15 +178,17 @@ public class ProjectValidationController {
   //@Autowired
   //ProjectService projectService;
   @Autowired
-  MessageProducer messageProducer;
+  MessageProducer messageProducer; // <1>
 
   @RequestMapping(value = "/saveProject", method = RequestMethod.POST)
   public ModelAndView saveProject(@Valid Project project, BindingResult binding) {
       // More code...
       //projectService.createNewProject(project);
-      messageProducer.heavyOperationForDelegationAndProcessing(project);
+      messageProducer.heavyOperationForDelegationAndProcessing(project); // <2>
       // More code...
     }
   }
 }
 ----
+<1> Sustituimo el bean de `projectService` por el productor de mensajes
+<2> Usamos el método en envío de mensajes con el mismo objeto _project_
