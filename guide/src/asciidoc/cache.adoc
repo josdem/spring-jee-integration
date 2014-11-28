@@ -1,3 +1,144 @@
 
 = Mejor rendimiento con uso de caché en Spring Data JPA
 
+Desde la versión 3.1, Spring Framework proporciona soporte para añadir transparente almacenamiento en caché en una aplicación Spring existente. Al igual que el soporte de transacciones, la abstracción de almacenamiento en caché permite el uso constante de diversas soluciones de almacenamiento en caché con un impacto mínimo en el código.
+
+En su esencia, la abstracción se aplica el almacenamiento en caché de los métodos de Java, lo que reduce el número de ejecuciones en base a la información disponible en el caché. Es decir, cada vez que un método se invoca, la abstracción aplicará un comportamiento de almacenamiento en caché, para comprobar si el método ha sido ya ejecutada con los argumentos dados. Si es así, entonces el resultado en caché se devuelve sin tener que ejecutar el método real; Si no, se ejecuta el método, el resultado se guarda en caché y devuelve al usuario el resultado, de modo que, la próxima vez que se invoca el método, el resultado almacenado en devuelve del caché. De esta manera, los métodos pesados(por la suma de CPU y Entradas/Salidas) se pueden ejecutar solamente una vez para un conjunto dado de parámetros y el resultado puede ser reutilizado sin tener que ejecutar en realidad el método de nuevo. La lógica de almacenamiento en caché se aplica de forma transparente sin ninguna interferencia al invocador.
+
+Para usar la abstracción del caché, el desarrollador necesita cuidar dos aspectos:
+
+* La declaración del caché, identificando los métodos que necesitan ser _cacheados_ y sus políticas.
+* La configuración de caché, el respaldo del caché donde los datos son almacenados y leídos.
+
+Hay que tener en cuenta que al igual que otros servicios en Spring, el servicio de almacenamiento en caché es una abstracción (no una implementación de caché) y requiere el uso de un almacenamiento real para los datos de caché, es decir, la abstracción libera al programador de tener que escribir la lógica del almacenamiento en caché, pero no proporciona los almacenes reales. Hay dos integraciones disponibles, para el JDK `java.util.concurrent.ConcurrentMap` y http://ehcache.org[EhCache].
+
+[NOTE]
+.build.gradle
+====
+Usaremos la dependencia de ehcache para esta parte, por lo que recomendamos agregarla desde un principio.
+
+[source, groovy]
+.hibernate.properties
+----
+compile "org.hibernate:hibernate-ehcache:4.3.1.Final"
+----
+
+====
+
+== Configuración esencial
+
+[source, plain]
+.hibernate.properties
+----
+hibernate.cache.use_query_cache=true
+hibernate.cache.use_second_level_cache=true
+hibernate.generate_statistics=true
+hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+----
+
+
+[source, xml]
+.Configuración del caché en el AppCtx
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cache="http://www.springframework.org/schema/cache"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd">
+
+  <cache:annotation-driven /> <!--1-->
+
+  <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager"> <!--2-->
+    <property name="caches">
+      <util:set>
+        <bean
+          class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+          <property name="name" value="predefinedFinders" />
+        </bean>
+      </util:set>
+    </property>
+  </bean>
+
+</beans>
+----
+<1> Cuando agregamos la dependencia de caché podemos hacer uso del namespace de _cache_
+<2> Esta es la implementación más simple de Caché proveída por Spring, recomendamos ver `org.springframework.cache.ehcache.EhCacheCacheManager`
+
+[source, xml]
+.Implementando EhCache
+----
+<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cache-manager-ref="ehcache"/>
+
+<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:config-location="ehcache.xml"/>
+----
+
+Si bien, deseamos habilitar este caché con JavaConfig podemos hacer lo siguiente:
+
+[source, java]
+.Configuración del caché en el AppCtx por JavaConfig
+----
+@Configuration
+@EnableCaching
+public class AppConfig {
+}
+----
+
+== Configuración de EhCache
+
+Para determinar la configuración exacta que necesitas del caché, entonces puedes consultar http://ehcache.org/files/documentation/EhcacheUserGuide.pdf[la guía de usuario de EhCache], sin embargo, mostramos la configuración esencial:
+
+[source, xml]
+.ehcache.xml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+  <diskStore path="java.io.tmpdir" />
+  <defaultCache eternal="false" maxElementsInMemory="1000"
+    overflowToDisk="true" diskPersistent="true" timeToLiveSeconds="300" />
+
+</ehcache>
+----
+
+== Uso del caché
+
+[source, java]
+.Uso en clases de Dominio
+----
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+@Entity
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+public class Project implements Comparable<Project> {
+  // More code
+}
+----
+
+[source, java]
+.Uso en interfaces de búsqueda de Spring Data JPA
+----
+package com.makingdevs.repositories;
+
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.cache.annotation.Cacheable;
+
+import com.makingdevs.model.Project;
+import com.makingdevs.model.UserStory;
+
+public interface UserStoryRepository extends CrudRepository<UserStory, Long> {
+  @Cacheable("predefinedFinders")
+  List<UserStory> findAllByEffortBetween(Integer lowValue, Integer maxValue);
+  @Cacheable("predefinedFinders")
+  List<UserStory> findAllByPriorityBetween(Integer lowValue, Integer maxValue);
+  @Cacheable("predefinedFinders")
+  List<UserStory> findAllByProject(Project project);
+}
+----
+
+NOTE: Te recomendamos que observes que clases se usan más para consulta, ya que dichas clases son las candidatas para meter en un caché más duradero.

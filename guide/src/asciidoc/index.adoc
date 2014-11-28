@@ -17,9 +17,9 @@ include::quartz.adoc[]
 
 include::jndi.adoc[]
 
-include::rest_template.adoc[]
+#include::rest_template.adoc[]
 
-include::webservices_soap.adoc[]
+#include::webservices_soap.adoc[]
 
 include::cache.adoc[]
 
