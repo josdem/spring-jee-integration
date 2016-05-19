@@ -15,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {MailConfig.class})
+@ContextConfiguration(classes = { MailConfig.class })
 public class MailServiceIntegrationTest {
 
   @Autowired
@@ -23,30 +23,25 @@ public class MailServiceIntegrationTest {
 
   @Test
   public void sendingSimpleMailTest() {
-    mailService.sendMail("username@domain.com", // <1>
+    mailService.sendMail("joseluis.delacruz@gmail.com", // <1>
         "Mensaje desde la aplicación...");
   }
 
   @Test
   public void sendingMimeMailTest() {
-    mailService.sendMimeMail("username@domain.com",
-        "Mensaje MIME desde la aplicación...", "Notificación de sistema");
+    mailService.sendMimeMail("joseluis.delacruz@gmail.com", "Mensaje MIME desde la aplicación...", "Notificación de sistema");
   }
 
   @Test
   public void sendingMailWithAttachmentTest() throws MessagingException {
-    FileSystemResource attach = new FileSystemResource(
-        "/home/makingdevs/ubuntu-logo/ubuntu-logo16.png");
-    mailService.sendMailWithAttach("username@domain.com",
-        "Mensaje con documento adjunto...", "Notificación de informe", attach); // <2>
+    FileSystemResource attach = new FileSystemResource("src/test/resources/ubuntu-logo.png");
+    mailService.sendMailWithAttach("joseluis.delacruz@gmail.com", "Mensaje con documento adjunto...", "Notificación de informe", attach); // <2>
   }
 
   @Test
   public void sendingMailWithInlineTest() throws MessagingException {
-    FileSystemResource attach = new FileSystemResource(
-        "/home/makingdevs/ubuntu-logo/ubuntu-logo16.png");
-    mailService.sendMailWithInline("username@domain.com",
-        "Mensaje con documento adjunto...", "Notificación de informe", attach); // <3>
+    FileSystemResource attach = new FileSystemResource("src/test/resources/ubuntu-logo.png");
+    mailService.sendMailWithInline("joseluis.delacruz@gmail.com", "Mensaje con documento adjunto...", "Notificación de informe", attach); // <3>
   }
 
   @Test
@@ -61,8 +56,7 @@ public class MailServiceIntegrationTest {
     manifesto.add("Customer collaboration over contract negotiation");
     manifesto.add("Responding to change over following a plan");
     model.put("manifesto", manifesto);
-    mailService.sendMailWithEngine("username@domain.com", model,
-        "Notificación con Template", "template.ftl");
+    mailService.sendMailWithEngine("joseluis.delacruz@gmail.com", model, "Notificación con Template", "template.ftl");
   }
 
 }
