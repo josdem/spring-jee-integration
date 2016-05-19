@@ -46,6 +46,7 @@ subprojects {
 project(":labs:core"){
   dependencies {
     compile "org.hibernate:hibernate-entitymanager:4.3.1.Final"
+    compile "org.apache.commons:commons-lang3:3.2.1"
   }
 }
 
