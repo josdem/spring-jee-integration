@@ -3,7 +3,7 @@
 
 SpringFramework proporciona abstracciones para la ejecución asíncrona y la programación de tareas con las interfaces `TaskExecutor` y `TaskScheduler`, respectivamente. Cuenta con las implementaciones de las interfaces que soportan _thread pools_ o delegación a https://docs.oracle.com/cd/E13222_01/wls/docs92/commonj/commonj.html[CommonJ] dentro de un servidor de aplicaciones. En última instancia el uso de estas implementaciones detrás de las interfaces comunes abstrae las diferencias entre Java SE 5, Java SE 6 y entornos Java EE.
 
-Spring también cuenta con la integración para apoyar la programación con la clase `Timer`, parte del JDK desde 1,3, y el https://github.com/TechMindsMX[Quartz Scheduler]. Ambos programadores se configuran utilizando un _FactoryBean_ con referencias opcionales a instancias de `Timer` o de `Trigger`. Por otra parte, una clase de conveniencia tanto para Quartz y el _Timer_ permite invocar un método de un objeto existente como destino(análogo al funcionamiento normal `MethodInvokingFactoryBean`).
+Spring también cuenta con la integración para apoyar la programación con la clase `Timer`, parte del JDK desde 1,3, y el http://www.quartz-scheduler.org/[Quartz Scheduler]. Ambos programadores se configuran utilizando un _FactoryBean_ con referencias opcionales a instancias de `Timer` o de `Trigger`. Por otra parte, una clase de conveniencia tanto para Quartz y el _Timer_ permite invocar un método de un objeto existente como destino(análogo al funcionamiento normal `MethodInvokingFactoryBean`).
 
 == Spring TaskExecutor
 
