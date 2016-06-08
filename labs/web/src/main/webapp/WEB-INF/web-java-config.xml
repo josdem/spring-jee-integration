@@ -37,7 +37,7 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-  <!-- Deshabilita en el contenedor de Servlet el manejo de archivo de bienvenida.
+  <!-- Deshabilita en el contenedor de Servlet el manejo de archivo de bienvenida. 
     Necesario para la compatibilidad con Servlet 3.0 y Tomcat 7.0 -->
   <welcome-file-list>
     <welcome-file></welcome-file>

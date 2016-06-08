@@ -45,7 +45,7 @@ public class MailServiceImpl implements MailService {
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
       public void prepare(MimeMessage mimeMessage) throws Exception {
         mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-        mimeMessage.setFrom(new InternetAddress("social@makingdevs.com"));
+        mimeMessage.setFrom(new InternetAddress("contact@josdem.io"));
         mimeMessage.setSubject(subject);
         mimeMessage.setText(message);
       }
@@ -60,7 +60,7 @@ public class MailServiceImpl implements MailService {
 
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
     helper.setTo(email);
-    helper.setFrom("social@makingdevs.com");
+    helper.setFrom("contact@josdem.io");
     helper.setText(message);
     helper.setSubject(subject);
     helper.addAttachment(attach.getFilename(), attach);
@@ -73,7 +73,7 @@ public class MailServiceImpl implements MailService {
     MimeMessage mimeMessage = javaMailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
     helper.setTo(email);
-    helper.setFrom("social@makingdevs.com");
+    helper.setFrom("contact@josdem.io");
     helper.setSubject(subject);
     helper.setText(message, true);
     helper.addInline("identifier1", inline);

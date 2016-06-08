@@ -13,3 +13,5 @@ activemq-data/
 labs/jms/.gitignore
 **/trackbox.log*
 **/.springBeans
+labs/bower_components/
+/.gradle/

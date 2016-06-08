@@ -6,6 +6,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class MessageProducerImpl implements MessageProducer {
   @Override
   public void heavyOperationForDelegationAndProcessing(Project project) {
     log.debug("Sending message: ");
+    log.debug("Project Sender: " + ToStringBuilder.reflectionToString(project));
     XStream stream = new XStream(new DomDriver());
     final String xml = stream.toXML(project);
     log.debug("Message: " + xml);
