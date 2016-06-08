@@ -5,7 +5,6 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ public class CustomMessageListener implements MessageListener {
         xml = mensaje.getText();
         XStream stream = new XStream(new DomDriver());
         Project project = (Project)stream.fromXML(xml);
-        log.debug("Project Listener:" + ToStringBuilder.reflectionToString(project));
         delegationService.processProject(project); // <1>
       } catch (JMSException e) {
         log.error(e.getMessage());

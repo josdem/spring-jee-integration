@@ -34,7 +34,6 @@ public class MessageProducerImpl implements MessageProducer {
   @Override
   public void heavyOperationForDelegationAndProcessing(Project project) {
     log.debug("Sending message: ");
-    log.debug("Project Sender: " + ToStringBuilder.reflectionToString(project));
     XStream stream = new XStream(new DomDriver());
     final String xml = stream.toXML(project);
     log.debug("Message: " + xml);

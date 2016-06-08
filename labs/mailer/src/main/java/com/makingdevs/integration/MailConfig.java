@@ -45,7 +45,7 @@ public class MailConfig {
   @Bean
   public SimpleMailMessage simpleMailMessage() {
     SimpleMailMessage mailMessage = new SimpleMailMessage();
-    mailMessage.setFrom("info@makingdevs.com");
+    mailMessage.setFrom("contact@josdem.io");
     mailMessage.setSubject("MakingDevs Training");
     return mailMessage;
   }

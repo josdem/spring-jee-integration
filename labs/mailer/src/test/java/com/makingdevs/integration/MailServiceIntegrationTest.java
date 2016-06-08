@@ -48,7 +48,7 @@ public class MailServiceIntegrationTest {
   public void sendingMailWithEngineTest() throws MessagingException {
     // <4>
     Map model = new HashMap();
-    model.put("name", "neodevelop");
+    model.put("name", "josdem");
     model.put("courseName", "Spring Mail Training");
     List<String> manifesto = new ArrayList<String>();
     manifesto.add("Individuals and interactions over processes and tools");
