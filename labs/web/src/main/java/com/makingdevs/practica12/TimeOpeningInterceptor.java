@@ -1,7 +1,5 @@
 package com.makingdevs.practica12;
 
-import java.util.Calendar;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,7 +17,7 @@ public class TimeOpeningInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     log.debug("preHandle()");
-    log.debug(request);
+    /*log.debug(request);
     log.debug(response);
     log.debug(handler);
     Calendar cal = Calendar.getInstance();
@@ -29,27 +27,28 @@ public class TimeOpeningInterceptor implements HandlerInterceptor {
     } else {
       response.sendRedirect("http://makingdevs.com");
       return false;
-    }
+    }*/
+    return true;
   }
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
       ModelAndView modelAndView) throws Exception {
     log.debug("postHandle()");
-    log.debug(request);
+    /*log.debug(request);
     log.debug(response);
     log.debug(handler);
-    log.debug(modelAndView);
+    log.debug(modelAndView);*/
   }
 
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
       throws Exception {
     log.debug("afterCompletion()");
-    log.debug(request);
+    /*log.debug(request);
     log.debug(response);
     log.debug(handler);
-    log.debug(ex);
+    log.debug(ex);*/
   }
 
 }

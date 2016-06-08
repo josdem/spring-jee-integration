@@ -2,6 +2,8 @@ package com.makingdevs.practica6;
 
 import javax.validation.Valid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.makingdevs.jms.MessageProducer;
 import com.makingdevs.model.Project;
 import com.makingdevs.repositories.ProjectRepository;
+import com.makingdevs.services.ProjectService;
 
 @Controller
 public class ProjectValidationController {
@@ -22,10 +25,12 @@ public class ProjectValidationController {
   @Autowired
   ProjectRepository projectRepository;
 
-  //@Autowired
-  //ProjectService projectService;
   @Autowired
-  MessageProducer messageProducer;
+  ProjectService projectService;
+  //@Autowired
+  //MessageProducer messageProducer;
+  
+  private Log log = LogFactory.getLog(this.getClass());
 
   @RequestMapping("/project")
   public String allProjects(Model model) {
@@ -47,8 +52,8 @@ public class ProjectValidationController {
       mv.getModel().put("project", project);
       return mv;
     } else {
-      //projectService.createNewProject(project);
-      messageProducer.heavyOperationForDelegationAndProcessing(project);
+      projectService.createNewProject(project);
+      //messageProducer.heavyOperationForDelegationAndProcessing(project);
       return new ModelAndView("redirect:/project");
     }
   }
