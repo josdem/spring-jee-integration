@@ -15,24 +15,24 @@ public class MultiplesScheduledJobsImpl implements MultiplesScheduledJobs {
 
   @Async
   @Scheduled(cron="20 0/1 * * * ?")
-  public void heavyWorkSync1() {
-    theSameJobWithNameAndCode("heavyWorkSync1", "HWS1*");
+  public void heavyWorkAsync1() {
+    theSameJobWithNameAndCode("heavyWorkAsync1", "HWA1*");
   }
 
   @Async
   @Scheduled(cron="30 0/1 * * * ?")
-  public void heavyWorkSync2() {
-    theSameJobWithNameAndCode("heavyWorkSync2", "HWS2-");
+  public void heavyWorkAsync2() {
+    theSameJobWithNameAndCode("heavyWorkAsync2", "HWA2-");
   }
 
   @Scheduled(cron="10 0/1 * * * ?")
-  public void heavyWorkAsync1() {
-    theSameJobWithNameAndCode("heavyWorkAsync1", "HWA1$");
+  public void heavyWorkSync1() {
+    theSameJobWithNameAndCode("heavyWorkSync1", "HWS1$");
   }
 
   @Scheduled(cron="15 0/1 * * * ?")
-  public void heavyWorkAsync2() {
-    theSameJobWithNameAndCode("heavyWorkAsync1", "HWA2%");
+  public void heavyWorkSync2() {
+    theSameJobWithNameAndCode("heavyWorkSync2", "HWS2%");
   }
 
   private void theSameJobWithNameAndCode(String name, String code) {
